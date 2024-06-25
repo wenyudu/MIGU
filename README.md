@@ -26,8 +26,6 @@ For fulltuning with T5-large, you can reproduce our experiments of order 1,2,3 b
 ```
 bash scripts/run_all.sh 
 ```
-## TODO
-- [ ] Refactor our code to make it more concise -- 2024.7 .
 
 
 ## Acknowledge

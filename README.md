@@ -22,3 +22,24 @@ pip install -r requirements.txt
 You are also required to download the t5-large model from huggingface, put it to the folder named initial_model.
 
 ## Training and Evaluation
+For fulltuning with T5-large, you can reproduce our experiments of order 1,2,3 by simply running:
+```
+bash scripts/run_all.sh 
+```
+## TODO
+- [ ] Refactor our code to make it more concise -- 2024.7 .
+
+
+## Acknowledge
+Our code is based on O-LoRA, licensed under the Apache-2.0 license.
+```
+@article{wang2023orthogonal,
+  title={Orthogonal Subspace Learning for Language Model Continual Learning},
+  author={Wang, Xiao and Chen, Tianze and Ge, Qiming and Xia, Han and Bao, Rong and Zheng, Rui and Zhang, Qi and Gui, Tao and Huang, Xuanjing},
+  journal={arXiv preprint arXiv:2310.14152},
+  year={2023}
+}
+```
+## Citation
+```
+```

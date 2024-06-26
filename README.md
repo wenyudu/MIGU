@@ -40,4 +40,13 @@ Our code is based on O-LoRA, licensed under the Apache-2.0 license.
 ```
 ## Citation
 ```
+@misc{du2024unlockingcontinuallearningabilities,
+      title={Unlocking Continual Learning Abilities in Language Models}, 
+      author={Wenyu Du and Shuang Cheng and Tongxu Luo and Zihan Qiu and Zeyu Huang and Ka Chun Cheung and Reynold Cheng and Jie Fu},
+      year={2024},
+      eprint={2406.17245},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+      url={https://arxiv.org/abs/2406.17245}, 
+}
 ```

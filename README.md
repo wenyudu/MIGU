@@ -7,7 +7,7 @@
 The official implementation for the paper **Unlocking Continual Learning Abilities in Language Models**
 
 <p align="center">
-🔔 <a href="https://github.com/wenyudu/MIGU" target="_blank">Code</a> • 📃 <a href="" target="_blank">Paper</a><br>
+🔔 <a href="https://github.com/wenyudu/MIGU" target="_blank">Code</a> • 📃 <a href="https://arxiv.org/abs/2406.17245" target="_blank">Paper</a><br>
 </p>
 
 ## Abstract

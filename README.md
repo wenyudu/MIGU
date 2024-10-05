@@ -4,7 +4,7 @@
     <img src="data/MIGU.png" width="256" height="256">
 </div>
 
-The official implementation for the paper **Unlocking Continual Learning Abilities in Language Models**
+The official implementation for the paper **Unlocking Continual Learning Abilities in Language Models** [EMNLP 2024 Findings]
 
 <p align="center">
 🔔 <a href="https://github.com/wenyudu/MIGU" target="_blank">Code</a> • 📃 <a href="https://arxiv.org/abs/2406.17245" target="_blank">Paper</a><br>

@@ -22,9 +22,9 @@ pip install -r requirements.txt
 You are also required to download the t5-large model from huggingface, put it to the folder named initial_model.
 
 ## Training and Evaluation
-For fulltuning with T5-large, you can reproduce our experiments of order 1,2,3 by simply running:
+For full tuning with T5-large, you can reproduce our experiments of order 1,2,3 by simply running:
 ```
-bash scripts/run_all.sh 
+bash scripts/standard_benchmark_ft.sh
 ```
 
 

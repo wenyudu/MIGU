@@ -506,6 +506,7 @@ class UIEInstructions(datasets.GeneratorBasedBuilder):
                 sampling_strategy = dataset.get("sampling strategy", "random")
                 ds_path = os.path.join(path, task, ds_name, subset + '.json')
                 labels_path = os.path.join(path, task, ds_name, 'labels.json')
+                # print(ds_path, labels_path)
                 assert os.path.exists(ds_path)
                 assert os.path.exists(labels_path)
 

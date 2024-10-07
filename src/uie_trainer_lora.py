@@ -441,14 +441,12 @@ class UIETrainer(Seq2SeqTrainer):
         total_batched_samples = 0
         temporal_activation_sum = {}
         cluster_indice = None
-        if args.method == "cluster_activate" and args.is_first_task == False:
+        if args.method == "migu" and args.is_first_task == False:
             import utils_local
-            # from peft.tuners.lora import Linear
-            from olora.tuners.lora import Linear
+            from peft.tuners.lora import Linear
             # cluster_indice = utils_local.get_cluster_indice(model, args)
             if args.cluster_constructure_method == "weight_cluster":
-                raise ValueError("The specified cluster construction method 'weight_cluster' is not supported.")
-                cluster_indice = utils_local.get_cluster_indices_combined(model, args)
+                cluster_indice = utils_local.get_cluster_indices(model, args)
             elif  args.cluster_constructure_method == "weight_cluster_combined":
                 # cluster_indice = utils_local.get_cluster_indices_combined_multiprocessing(model, args)
                 cluster_indice = utils_local.get_cluster_indices_combined(model, args)
@@ -458,21 +456,30 @@ class UIETrainer(Seq2SeqTrainer):
                 cluster_indice = utils_local.get_cluster_indices_co_activation(self, model, calib_dataloader, args)
 
             def hook_fn(module, input, output, name):
+                # module_input_key = f"{name}_input"
+                # if module_input_key not in temporal_activation:
+                #     temporal_activation[module_input_key] = []
+                # print(input)
+                # exit()
                 hidden_dim = output.shape[-1]
+
                 if name not in temporal_activation_sum:
                     temporal_activation_sum[name] = torch.sum(output.reshape(-1, hidden_dim).abs(), dim=0)
                 else:
                     temporal_activation_sum[name] += torch.sum(output.reshape(-1, hidden_dim).abs(), dim=0)
 
+                # # temporal_activation[module_input_key].append(input[0].detach())
+                # num_tokens = output.shape[0] * output.shape[1]
+                # temporal_activation[name].append(output.detach())
 
             for name, module in model.named_modules():
-                if "loranew_A.default" in name or isinstance(module, Linear):
+                # if "lora_A.default" in name or "lora_B.default" in name or isinstance(module, Linear):
+                if isinstance(module, nn.Linear):
                     module._forward_hooks.clear()
                     module.register_forward_hook(
                         lambda module, input, output, name=name: hook_fn(module, input, output, name)
                     )
                     print(f"register hooks for {name}")
-
 
         for epoch in range(epochs_trained, num_train_epochs):
             epoch_iterator = train_dataloader
@@ -747,25 +754,17 @@ class UIETrainer(Seq2SeqTrainer):
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
 
-        ########################## Regularization ##########################
-        orthogonal_loss = torch.tensor(0., device=loss.device)
-        # if self.args.method == "olora":
-        for name, param in self.model.named_parameters():
-            if "lora_A" in name:
-                for name_, param_ in self.model.named_parameters():
-                    if "loranew_A" in name_ and name.split("lora_A")[0] == name_.split("loranew_A")[0]:
-                        orthogonal_loss += torch.abs(torch.mm(param, param_.T)).sum() # [r * dim] * [dim * r]
-                        break # target modules have been matched
+        # # l2-normalization for loranew_A/B
+        # l2_loss = 0.
+        # for name, param in self.model.named_parameters():
+        #     if "lora_" in name:
+        #         l2_loss += torch.norm(param, p=2)
 
-        # l2-normalization for loranew_A/B
-        l2_loss = 0.
-        for name, param in self.model.named_parameters():
-            if "loranew_" in name:
-                l2_loss += torch.norm(param, p=2)
-        
-        logger.info(f"orthogonal_loss: {orthogonal_loss.item()}; l2_loss: {l2_loss.item()}; accuracy_loss: {loss.item()}; λ1: {self.args.lamda_1}; λ2: {self.args.lamda_2}")
-        loss = loss + orthogonal_loss * self.args.lamda_1 + l2_loss * self.args.lamda_2
-        
+        # lamda = self.args.lamda
+
+        # logger.info(f"l2_loss: {l2_loss.item()}; accuracy_loss: {loss.item()}; λ2: {lamda}")
+        # loss = loss + l2_loss * lamda
+
         if self.use_apex:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:
                 scaled_loss.backward()
@@ -865,6 +864,8 @@ class UIETrainer(Seq2SeqTrainer):
 
                 # Prediction step
                 loss, logits, labels = self.prediction_step(model, inputs, prediction_loss_only, ignore_keys=ignore_keys)
+                # print("woshilogit", model, inputs, prediction_loss_only, ignore_keys)
+                # exit()
                 main_input_name = getattr(self.model, "main_input_name", "input_ids")
                 inputs_decode = self._prepare_input(inputs[main_input_name]) if args.include_inputs_for_metrics else None
 

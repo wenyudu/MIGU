@@ -46,8 +46,7 @@ from transformers import (
     set_seed, )
 from transformers.file_utils import is_offline_mode
 from transformers.trainer_utils import get_last_checkpoint
-# from peft import get_peft_config, get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig # add
-from olora import get_peft_config, get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig # add
+from peft import get_peft_config, get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig # add
 
 from uie_collator import DataCollatorForUIE
 from uie_dataset_lora import gen_cache_path
@@ -240,8 +239,7 @@ class UIETrainingArguments(Seq2SeqTrainingArguments):
         metadata={"help": "If specifid, the model will do more evaluation at the beginning of training."}
     )
     do_demo: bool = field(default=False, metadata={"help": "Whether to run the model as a demo in the terminal."})
-    lamda_1: float = field(default = 0)
-    lamda_2: float = field(default = 0)
+    lamda: float = field(default = 0)
     method: str = field(
         default="cluster_activate", metadata={"help": "the different method name, default is olora"}
     )
@@ -303,6 +301,8 @@ def main():
             )
 
     # Set seed before initializing model.
+    # print(training_args.seed)
+    # exit()
     set_seed(training_args.seed)
     data_cache_dir = gen_cache_path(training_args.output_dir, data_args)
 
@@ -325,19 +325,7 @@ def main():
     # Distributed training:
     # The .from_pretrained methods guarantee that only one local process can concurrently
     # download model & vocab.
-    if 'adapter' in model_args.model_name_or_path: # load lora-config
-        config = PeftConfig.from_pretrained(model_args.model_name_or_path)
-        if 'llama' in model_args.model_name_or_path.lower():
-            tokenizer = transformers.LlamaTokenizer.from_pretrained(config.base_model_name_or_path)
-            config.bos_token_id = 1
-            config.eos_token_id = 2
-            config.pad_token_id = 1
-            tokenizer.bos_token_id = 1
-            tokenizer.eos_token_id = 2
-            tokenizer.pad_token_id = 1
-        else:
-            tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path)
-    elif 'llama' in model_args.model_name_or_path.lower():
+    if 'llama' in model_args.model_name_or_path.lower():
         config = AutoConfig.from_pretrained(
             model_args.model_name_or_path,
             cache_dir=model_args.cache_dir,
@@ -373,10 +361,7 @@ def main():
     else: 
         model_class = AutoModelForSeq2SeqLM
 
-    if 'adapter' in model_args.model_name_or_path: # add lora-adapter to the original model
-        model = model_class.from_pretrained(config.base_model_name_or_path)
-        model = PeftModel.from_pretrained(model, model_args.model_name_or_path)
-    elif 'llama' in model_args.model_name_or_path.lower():
+    if 'llama' in model_args.model_name_or_path.lower():
         model = model_class.from_pretrained(
             model_args.model_name_or_path,
             from_tf=bool(".ckpt" in model_args.model_name_or_path),
@@ -385,10 +370,10 @@ def main():
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None
         )
-        peft_config = LoraConfig(
-            task_type=TaskType.CAUSAL_LM, inference_mode=False, r=model_args.lora_dim, lora_alpha=32, lora_dropout=0.1
-        )
-        model = get_peft_model(model, peft_config)
+        # peft_config = LoraConfig(
+        #     task_type=TaskType.CAUSAL_LM, inference_mode=False, r=model_args.lora_dim, lora_alpha=32, lora_dropout=0.1
+        # )
+        # model = get_peft_model(model, peft_config)
     else:
         model = model_class.from_pretrained(
             model_args.model_name_or_path,
@@ -398,11 +383,12 @@ def main():
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
         )
-        peft_config = LoraConfig(
-            task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=model_args.lora_dim, lora_alpha=32, lora_dropout=0.1
-        )
-        model = get_peft_model(model, peft_config)
-
+        # peft_config = LoraConfig(
+        #     task_type=TaskType.SEQ_2_SEQ_LM, inference_mode=False, r=model_args.lora_dim, lora_alpha=32, lora_dropout=0.1
+        # )
+        # model = get_peft_model(model, peft_config)
+    # print(model)
+    # exit()
     model.resize_token_embeddings(len(tokenizer))
 
     if 'llama' in model_args.model_name_or_path.lower():
@@ -414,14 +400,14 @@ def main():
     # fine-tune loranew_A/B (initialized in "update_layer"[lora.py])
     # optional: lora_A/B is trainable but should not move too far from lorapre_A/B
     # (constrained in "training_step"[uie_trainer_lora.py])
-    for name, param in model.named_parameters():
-        if name.find("loranew_") != -1:
-            param.requires_grad = True
-        elif name.find("lora_") != -1:
-            param.requires_grad = False
-        # this module should always be frozen because we change the vocabulary
-        elif name.find("shared") != -1:
-            param.requires_grad = False
+    # for name, param in model.named_parameters():
+    #     # if name.find("SelfAttention") != -1:
+    #     #     param.requires_grad = True
+    #     if name.find("lora_") != -1:
+    #         param.requires_grad = True
+    #     # this module should always be frozen because we change the vocabulary
+    #     elif name.find("shared") != -1:
+    #         param.requires_grad = False
 
     if (
             hasattr(model.config, "max_position_embeddings")
@@ -536,7 +522,10 @@ def main():
         for name, module in model.named_modules():
             module._forward_hooks.clear()
         # 去除 hook
-        peft_model_id = training_args.output_dir + "/adapter"
+        peft_model_id = training_args.output_dir + "/tuning_weight"
+        # if not os.path.exists(peft_model_id):
+        #     # 创建目录
+        #     os.mkdir(peft_model_id)
         trainer.model.save_pretrained(peft_model_id)
         tokenizer.save_pretrained(peft_model_id)
 

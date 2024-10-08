@@ -17,8 +17,8 @@
 Fine-tuning the library models for sequence to sequence.
 """
 # You can also adapt this script on your own sequence to sequence task. Pointers for this are left as comments.
-from accelerate_local import replace_accelerator_backward_with_own_backward
-replace_accelerator_backward_with_own_backward()
+from accelerate_local import replace_accelerator_backward_with_own_backward_full_tuning
+replace_accelerator_backward_with_own_backward_full_tuning()
 
 import logging
 import os
@@ -46,10 +46,9 @@ from transformers import (
     set_seed, )
 from transformers.file_utils import is_offline_mode
 from transformers.trainer_utils import get_last_checkpoint
-from peft import get_peft_config, get_peft_model, LoraConfig, TaskType, PeftModel, PeftConfig # add
 
 from uie_collator import DataCollatorForUIE
-from uie_dataset_lora import gen_cache_path
+from uie_dataset import gen_cache_path
 
 from uie_trainer_ft import UIETrainer, DenserEvalCallback, skip_instructions
 from compute_metrics import compute_metrics, compute_grouped_metrics
@@ -111,13 +110,6 @@ class ModelArguments:
         metadata={
             "help": "Whether to automatically resize the position embeddings if `max_source_length` exceeds "
                     "the model's position embeddings."
-        },
-    )
-    # added for AutoCL
-    lora_dim: Optional[int] = field(
-        default=8,
-        metadata={
-            "help": "Intrinsic dimension of the latent space."
         },
     )
 
@@ -240,9 +232,8 @@ class UIETrainingArguments(Seq2SeqTrainingArguments):
     )
     do_demo: bool = field(default=False, metadata={"help": "Whether to run the model as a demo in the terminal."})
     lamda: float = field(default = 0)
-    method: str = field(
-        default="migu", metadata={"help": "the different method name, default is olora"}
-    )
+    method: str = field(default="migu", metadata={"help": "the method name, choices are 'migu', 'random_update', 'baseline'"})
+    # tuning_method: str = field(default="full_tuning", metadata={"help": "the method name, choices are 'full_tuning', 'lora_tuning', 'inclora_tuning'"})
     is_first_task: bool = field(default=False, metadata={"help": "used to determine whether it is the first task"})
     ini_threshold: float = field(default = 0.5)
 
@@ -301,7 +292,7 @@ def main():
 
     # Get the UIE dataset
     raw_datasets = load_dataset(
-        os.path.join(CURRENT_DIR, "uie_dataset_lora.py"),
+        os.path.join(CURRENT_DIR, "uie_dataset.py"),
         data_dir=data_args.data_dir,
         task_config_dir=data_args.task_config_dir,
         instruction_file=data_args.instruction_file,

@@ -44,8 +44,8 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --save_strategy no \
    --save_steps 1500 \
    --lamda 0 \
-   --method ${method} \
    --is_first_task True \
+   --method ${method} \
    --seed ${seed}
 
 sleep 5
@@ -85,7 +85,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -124,7 +124,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -163,7 +163,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -202,7 +202,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -241,7 +241,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -280,7 +280,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -319,7 +319,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -358,7 +358,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -397,7 +397,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -436,7 +436,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -475,7 +475,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -514,7 +514,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -553,7 +553,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}
 
 sleep 5
 
@@ -593,4 +593,4 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
    --is_first_task False \
    --method ${method} \
    --ini_threshold ${ini_threshold} \
-   --seed=${seed}
+   --seed ${seed}

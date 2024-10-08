@@ -13,7 +13,7 @@ seed=$5
 lr=1e-4
 # yelp → amazon → mnli → cb → copa → qqp → rte → imdb → sst-2 → dbpedia → ag → yahoo → multirc → boolqa → wic
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path initial_model/${model} \
@@ -50,7 +50,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/1-yelp/tuning_weight \
@@ -88,7 +88,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/2-amazon/tuning_weight \
@@ -126,7 +126,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/3-MNLI/tuning_weight \
@@ -164,7 +164,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/4-CB/tuning_weight \
@@ -202,7 +202,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/5-COPA/tuning_weight \
@@ -240,7 +240,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/6-QQP/tuning_weight \
@@ -278,7 +278,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/7-RTE/tuning_weight \
@@ -316,7 +316,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/8-IMDB/tuning_weight \
@@ -354,7 +354,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/9-SST-2/tuning_weight \
@@ -392,7 +392,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/10-dbpedia/tuning_weight \
@@ -430,7 +430,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/11-agnews/tuning_weight \
@@ -468,7 +468,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/12-yahoo/tuning_weight \
@@ -506,7 +506,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/13-MultiRC/tuning_weight \
@@ -544,7 +544,7 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --do_predict \
    --predict_with_generate \

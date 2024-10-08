@@ -11,7 +11,7 @@ method=$3
 ini_threshold=$4
 seed=$5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path initial_model/${model} \
@@ -48,7 +48,7 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_3/outputs/1-yahoo/tuning_weight \
@@ -86,7 +86,7 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path output/${model}/${tuning_method}/${method}/order_3/outputs/2-amazon/tuning_weight \
@@ -124,7 +124,7 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --do_predict \
    --predict_with_generate \

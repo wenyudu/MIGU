@@ -1,8 +1,8 @@
 ini_thresholds=(0.7)
 model="t5_large"
-method="migu"  # random_update, baseline(means no trick, just full finetuning)
+method="migu"
 seeds=(42 1024 2048)
-tuning_method="full_tuning"
+tuning_method="lora_tuning"
 
 for ini_threshold in "${ini_thresholds[@]}"; do
   for seed in "${seeds[@]}"; do

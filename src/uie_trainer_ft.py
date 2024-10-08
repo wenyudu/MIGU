@@ -5,7 +5,7 @@ from transformers.trainer import *
 from transformers.trainer_callback import TrainerCallback
 
 from uie_collator import SUPPORTED_DECODER_MODELS, check_model
-from uie_dataset_lora import ANSWER_PREFIX
+from uie_dataset import ANSWER_PREFIX
 
 def nested_truncate(tensors, limit):
     "Truncate `tensors` at `limit` (even if it's a nested list/tuple/dict of tensors)."
@@ -440,7 +440,6 @@ class UIETrainer(Seq2SeqTrainer):
 
         total_batched_samples = 0
         temporal_activation_sum = {}
-        cluster_indice = None
         if args.method == "migu" and args.is_first_task == False:
 
             def hook_fn(module, input, output, name):
@@ -456,7 +455,6 @@ class UIETrainer(Seq2SeqTrainer):
                 # temporal_activation[name].append(output.detach())
 
             for name, module in model.named_modules():
-                # if "lora_A.default" in name or "lora_B.default" in name or isinstance(module, Linear):
                 if isinstance(module, nn.Linear):
                     module._forward_hooks.clear()
                     module.register_forward_hook(
@@ -734,16 +732,6 @@ class UIETrainer(Seq2SeqTrainer):
         if self.args.n_gpu > 1:
             loss = loss.mean()  # mean() to average on multi-gpu parallel training
 
-        # # l2-normalization for loranew_A/B
-        # l2_loss = 0.
-        # for name, param in self.model.named_parameters():
-        #     if "lora_" in name:
-        #         l2_loss += torch.norm(param, p=2)
-
-        # lamda = self.args.lamda
-
-        # logger.info(f"l2_loss: {l2_loss.item()}; accuracy_loss: {loss.item()}; λ2: {lamda}")
-        # loss = loss + l2_loss * lamda
 
         if self.use_apex:
             with amp.scale_loss(loss, self.optimizer) as scaled_loss:

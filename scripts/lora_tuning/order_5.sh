@@ -11,17 +11,17 @@ method=$3
 ini_threshold=$4
 seed=$5
 lr=1e-4
-# yelp → amazon → mnli → cb → copa → qqp → rte → imdb → sst-2 → dbpedia → ag → yahoo → multirc → boolqa → wic
-
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# bash scripts/order_5.sh > logs_and_outputs/order_5/logs/train_and_infer.log 2>&1
+# 1-multirc
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path initial_model/${model} \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/yelp \
+   --task_config_dir configs/order5_configs/multirc \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/1-yelp \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/1-multirc \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -50,15 +50,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 2-boolqa
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/1-yelp/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/1-multirc/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/amazon \
+   --task_config_dir configs/order5_configs/boolqa \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/2-amazon \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/2-boolqa \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -88,15 +89,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 3-wic
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/2-amazon/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/2-boolqa/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/MNLI \
+   --task_config_dir configs/order5_configs/wic \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/3-MNLI \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/3-wic \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -126,15 +128,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 4-mnli
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/3-MNLI/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/3-wic/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/CB \
+   --task_config_dir configs/order5_configs/mnli \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/4-CB \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/4-mnli \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -164,15 +167,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 5-cb
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/4-CB/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/4-mnli/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/COPA \
+   --task_config_dir configs/order5_configs/cb \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/5-COPA \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/5-cb \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -202,15 +206,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 6-copa
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/5-COPA/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/5-cb/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/QQP \
+   --task_config_dir configs/order5_configs/copa \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/6-QQP \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/6-copa \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -240,15 +245,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 7-qqp
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/6-QQP/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/6-copa/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/RTE \
+   --task_config_dir configs/order5_configs/qqp \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/7-RTE \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/7-qqp \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -278,15 +284,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 8-rte
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/7-RTE/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/7-qqp/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/IMDB \
+   --task_config_dir configs/order5_configs/rte \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/8-IMDB \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/8-rte \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -316,15 +323,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 9-imdb
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/8-IMDB/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/8-rte/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/SST-2 \
+   --task_config_dir configs/order5_configs/imdb \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/9-SST-2 \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/9-imdb \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -354,15 +362,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 10-sst-2
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/9-SST-2/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/9-imdb/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/dbpedia \
+   --task_config_dir configs/order5_configs/sst-2 \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/10-dbpedia \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/10-sst-2 \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -392,15 +401,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 11-dbpedia
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/10-dbpedia/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/10-sst-2/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/agnews \
+   --task_config_dir configs/order5_configs/dbpedia \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/11-agnews \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/11-dbpedia \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -430,15 +440,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 12-ag
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/11-agnews/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/11-dbpedia/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/yahoo \
+   --task_config_dir configs/order5_configs/agnews \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/12-yahoo \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/12-agnews \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -468,15 +479,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+#13-yelp
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/12-yahoo/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/12-agnews/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/MultiRC \
+   --task_config_dir configs/order5_configs/yelp \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/13-MultiRC \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/13-yelp \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -506,15 +518,16 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 14-amazon
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/13-MultiRC/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/13-yelp/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/BoolQA \
+   --task_config_dir configs/order5_configs/amazon \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/14-BoolQA \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/14-amazon \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
@@ -544,16 +557,17 @@ deepspeed --master_port 25000 src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port 25000 src/run_uie_ft.py \
+# 15-yahoo
+deepspeed --master_port 25000 src/run_uie_lora.py \
    --do_train \
    --do_predict \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_6/outputs/14-BoolQA/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_5/outputs/14-amazon/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order6_configs/WiC \
+   --task_config_dir configs/order5_configs/yahoo \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_6/outputs/15-WiC \
+   --output_dir output/${model}/${tuning_method}/${method}/order_5/outputs/15-yahoo \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \

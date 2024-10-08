@@ -11,22 +11,22 @@ method=$3
 ini_threshold=$4
 seed=$5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
    --model_name_or_path initial_model/${model} \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order3_configs/yahoo \
+   --task_config_dir configs/order2_configs/dbpedia \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_3/outputs/1-yahoo \
+   --output_dir output/${model}/${tuning_method}/${method}/order_2/outputs/1-dbpedia \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
    --learning_rate 1e-04 \
    --num_train_epochs 1 \
    --deepspeed configs/ds_configs/stage0.config \
-   --run_name order3_round1 \
+   --run_name order2_round1 \
    --max_source_length 512 \
    --max_target_length 50 \
    --generation_max_length 50 \
@@ -48,22 +48,22 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_3/outputs/1-yahoo/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_2/outputs/1-dbpedia/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order3_configs/amazon \
+   --task_config_dir configs/order2_configs/amazon \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_3/outputs/2-amazon \
+   --output_dir output/${model}/${tuning_method}/${method}/order_2/outputs/2-amazon \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
    --learning_rate 1e-04 \
    --num_train_epochs 1 \
    --deepspeed configs/ds_configs/stage0.config \
-   --run_name order3_round2 \
+   --run_name order2_round2 \
    --max_source_length 512 \
    --max_target_length 50 \
    --generation_max_length 50 \
@@ -86,22 +86,22 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_3/outputs/2-amazon/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_2/outputs/2-amazon/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order3_configs/agnews \
+   --task_config_dir configs/order2_configs/agnews \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_3/outputs/3-agnews \
+   --output_dir output/${model}/${tuning_method}/${method}/order_2/outputs/3-agnews \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
    --learning_rate 1e-04 \
    --num_train_epochs 1 \
    --deepspeed configs/ds_configs/stage0.config \
-   --run_name order3_round3 \
+   --run_name order2_round3 \
    --max_source_length 512 \
    --max_target_length 50 \
    --generation_max_length 50 \
@@ -124,23 +124,23 @@ deepspeed --master_port $port src/run_uie_ft.py \
 
 sleep 5
 
-deepspeed --master_port $port src/run_uie_ft.py \
+deepspeed --master_port $port src/run_uie_lora.py \
    --do_train \
    --do_predict \
    --predict_with_generate \
-   --model_name_or_path output/${model}/${tuning_method}/${method}/order_3/outputs/3-agnews/tuning_weight \
+   --model_name_or_path output/${model}/${tuning_method}/${method}/order_2/outputs/3-agnews/tuning_weight \
    --data_dir CL_Benchmark \
-   --task_config_dir configs/order3_configs/dbpedia \
+   --task_config_dir configs/order2_configs/yahoo \
    --instruction_file configs/instruction_config.json \
    --instruction_strategy single \
-   --output_dir output/${model}/${tuning_method}/${method}/order_3/outputs/4-dbpedia \
+   --output_dir output/${model}/${tuning_method}/${method}/order_2/outputs/4-yahoo \
    --per_device_train_batch_size 8 \
    --per_device_eval_batch_size 64 \
    --gradient_accumulation_steps 1 \
    --learning_rate 1e-04 \
    --num_train_epochs 1 \
    --deepspeed configs/ds_configs/stage0.config \
-   --run_name order3_round4 \
+   --run_name order2_round4 \
    --max_source_length 512 \
    --max_target_length 50 \
    --generation_max_length 50 \
